@@ -1,24 +1,6 @@
 # simple-td-calculator
 
-## Project setup
+## Scoping Document (in Japanese)
 ```
-npm install
+https://www.notion.so/Simle-TD-Calculator-59e608094fdf41c39ab3cff9f0f5d57d
 ```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
