@@ -2,20 +2,26 @@
 <template>
 <div class="dashboard">
     <div class="country-modal-container">
+        <TimeZoneModal/>
     </div>
     <form class="add-country">
         <button>Add</button>
-        <input type="text"/>
+        <input class="add-button" type="text"/>
     </form>
 
 </div>
 </template>
 
 <script>
+import TimeZoneModal from './TimeZoneModal.vue'
 export default {
+    name:TimeZoneModal,
     setup(){
         return   
-    }
+    },
+    components: {
+    TimeZoneModal
+  }
 }
 </script>
 
@@ -35,7 +41,7 @@ export default {
         text-align: center;     
         vertical-align: bottom;
 }
-input{
+.add-button {
     background: transparent;
     border:none;
     border-bottom: solid white 1px;

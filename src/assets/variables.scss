@@ -1,9 +1,14 @@
+$resize-factor:0.8;
 $body-font-family: 'Inter';
 $semibold-weight: 600;
 $bold-weight:     700;
 $xbold-weight:    800;
-$font-size-medium: 36px;
-$font-size-large: 96px;
-$font-size-small: 24px;
+$font-size-medium: $resize-factor * 36px;
+$font-size-large: $resize-factor * 96px;
+$font-size-small: $resize-factor * 24px;
 $font-color: white;
 $dashboard-background-color: #85DCBA;
+$timezone-background-color: #E8A87C;
+$timezone-width: $resize-factor * 500px;
+$timezone-height: $resize-factor * 270px;
+$timezone-radius: $resize-factor * 50px;
