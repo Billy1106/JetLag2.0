@@ -1,4 +1,4 @@
-$resize-factor:0.8;
+$resize-factor:0.5;
 $body-font-family: 'Inter';
 $semibold-weight: 600;
 $bold-weight:     700;
@@ -12,3 +12,4 @@ $timezone-background-color: #E8A87C;
 $timezone-width: $resize-factor * 500px;
 $timezone-height: $resize-factor * 270px;
 $timezone-radius: $resize-factor * 50px;
+$timezone-margin: $resize-factor * 20px;

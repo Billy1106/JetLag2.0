@@ -2,7 +2,8 @@
 <template>
 <div class="dashboard">
     <div class="country-modal-container">
-        <TimeZoneModal/>
+        <TimeZoneModal class="time-zone-modal"/>
+        <TimeZoneModal class="time-zone-modal"/>
     </div>
     <form class="add-country">
         <button>Add</button>
@@ -36,6 +37,9 @@ export default {
 .country-modal-container {
     min-width: 100vw;
     min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .add-country{
         text-align: center;     
@@ -57,7 +61,9 @@ button{
     size:$font-size-medium;
     font-weight:$bold-weight;
     font-family: $body-font-family;
-
+}
+.time-zone-modal{
+    margin:$timezone-margin;
 }
 </style>
   

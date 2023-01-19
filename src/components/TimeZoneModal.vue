@@ -51,7 +51,9 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     border-radius: $timezone-radius;
+    box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .5);
 }
 
 .timezone-modal input {
