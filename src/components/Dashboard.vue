@@ -2,12 +2,13 @@
 <template>
 <div class="dashboard">
     <div class="country-modal-container">
-        <TimeZoneModal class="time-zone-modal"/>
-        <TimeZoneModal class="time-zone-modal"/>
+        <div v-for="modal in modals" :key="modal.index">
+            <TimeZoneModal :country="modal.country" class="time-zone-modal"/>
+        </div>
     </div>
-    <form class="add-country">
+    <form class="add-country" @submit.prevent="handleAddCountry">
         <button>Add</button>
-        <input class="add-button" type="text"/>
+        <input type="text" v-model="countryName" class="add-button" placeholder="Country Code" />
     </form>
 
 </div>
@@ -15,10 +16,16 @@
 
 <script>
 import TimeZoneModal from './TimeZoneModal.vue'
+import {ref} from 'vue'
 export default {
     name:TimeZoneModal,
     setup(){
-        return   
+        const countryName = ref('')
+        const modals = ref([{index:0,country:"JP"},{index:1,country:"CN"}])
+        const handleAddCountry = () => {
+            modals.value.push({index:modals.value.length-1,country:countryName.value})
+        }
+        return {handleAddCountry,countryName,modals}
     },
     components: {
     TimeZoneModal
@@ -65,5 +72,9 @@ button{
 .time-zone-modal{
     margin:$timezone-margin;
 }
+::placeholder {
+    color: $font-color; 
+    opacity:0.4;
+  }
 </style>
   
