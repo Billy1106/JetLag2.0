@@ -12,29 +12,15 @@
     
 <script>
 import { ref } from 'vue'
-import * as ct from "countries-and-timezones";
+import initializeLocalTime from "../services/time/time-provider.js"
 export default {
     props: ['country'],
     setup(props) {
-        const ctCountry = ct.getCountry(props.country)
-        if(ctCountry === null){
-            return
-        }
-        const getInitialTime = () => {
-            const getInitialTimeZone = ct.getTimezone(ctCountry.timezones[0]).utcOffset
-            const utc = new Date().toUTCString();
-            const gDate = new Date(utc.replace('GMT', ''));
-            const hours = gDate.getHours();
-            gDate.setHours(hours + getInitialTimeZone / 60);
-            return gDate.toString();
-        }
-   
-        const timezone = ref(ctCountry.timezones[0])
-        const currentDate = new Date(getInitialTime())
-        const date = ref(String(currentDate.getMonth() + 1).padStart(2, '0') + "/" + String(currentDate.getDate()).padStart(2, '0'))
-        const year = ref(currentDate.getFullYear())
-        const localTime = currentDate.toLocaleTimeString();
-        const time = ref(localTime.substring(0, localTime.length - 3));
+        const regionTime = initializeLocalTime(props.country)
+        const timezone = ref(regionTime.timezone)
+        const date = ref(regionTime.date)
+        const year = ref(regionTime.year)
+        const time = ref(regionTime.time);
 
         return { date, year, time, timezone }
     }
