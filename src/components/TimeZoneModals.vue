@@ -20,7 +20,6 @@ export default {
     setup() {
         const store = useStore()
         const regionName = ref('')
-        console.log(getTimezoneByDate(store.getters.getBaseTime))
         const modals = ref([{ index: 0, region: getTimezoneByDate(store.getters.getBaseTime)}])
         const handleAddRegion = () => {
             if(findTimeZone(regionName.value) === null){
