@@ -12,18 +12,17 @@ export const findTimeZone = (region) => {//returns timezone of region e.g Asia/T
     }
     return null
 }
+export const getDateOfTimeZone = (regionTimezone,baseTime) =>{//create date instance of specified timezone and its time
+    const getInitialTimeZone = ct.getTimezone(regionTimezone).utcOffset
+    const utc = baseTime.toUTCString();
+    const gDate = new Date(utc.replace('GMT', ''));
+    const hours = gDate.getHours();
+    gDate.setHours(hours + getInitialTimeZone / 60);
+    return new Date (gDate.toString())
+}
 export const initializeLocalTime = (region, baseTime = new Date()) =>{
-    const regionTimezone = findTimeZone(region)
-    const getInitialTime = () => {//get current time of the time zone at regionTimezone)
-        const getInitialTimeZone = ct.getTimezone(regionTimezone).utcOffset
-        const utc = baseTime.toUTCString();
-        const gDate = new Date(utc.replace('GMT', ''));
-        const hours = gDate.getHours();
-        gDate.setHours(hours + getInitialTimeZone / 60);
-        return gDate.toString();
-    }
-
-    const currentDate = new Date(getInitialTime())
+    const regionTimezone = findTimeZone(region);
+    const currentDate = getDateOfTimeZone(regionTimezone,baseTime)
     const localTime = currentDate.toLocaleTimeString();
     const regionTime = {
         timezone:regionTimezone,
