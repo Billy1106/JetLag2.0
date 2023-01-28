@@ -23,14 +23,15 @@ export const getDateOfTimeZone = (regionTimezone,baseTime) =>{//create date inst
 export const initializeLocalTime = (region, baseTime = new Date()) =>{
     const regionTimezone = findTimeZone(region);
     const currentDate = getDateOfTimeZone(regionTimezone,baseTime)
-    const localTime = currentDate.toLocaleTimeString();
+    const localTime = currentDate.toLocaleTimeString()
+    const time = localTime.split(":")
     const regionTime = {
         timezone:regionTimezone,
         date:String(currentDate.getMonth() + 1).padStart(2, '0') + "/" + String(currentDate.getDate()).padStart(2, '0'),
         year:currentDate.getFullYear(),
-        time:localTime.substring(0, localTime.length - 3)
+        hour: time[0].padStart(2, '0'),
+        minutes: time[1].padStart(2, '0')
     }
-
     return regionTime;
 
 }

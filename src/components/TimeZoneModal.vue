@@ -5,7 +5,9 @@
             <input id="timezone-date" class="editable-field" v-model="date" />
             <input id="timezone-year" class="editable-field" v-model="year" />
         </div>
-        <input id="timezone-time" class="editable-field" v-model="time" />
+        <div id="timezone-time">
+            <input id="timezone-hour" class="editable-field" v-model="hour" />:<input id="timezone-minutes" class="editable-field" v-model="minutes" />
+        </div>
         <input id="timezone-name" class="editable-field" v-model="timezone" />
     </div>
 </template>
@@ -22,9 +24,10 @@ export default {
         const timezone = ref(regionTime.timezone)
         const date = ref(regionTime.date)
         const year = ref(regionTime.year)
-        const time = ref(regionTime.time);
+        const hour = ref(regionTime.hour);
+        const minutes = ref(regionTime.minutes)
 
-        return { date, year, time, timezone }
+        return { date, year, timezone, hour, minutes }
     }
 }
 </script>
@@ -45,7 +48,7 @@ export default {
     box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .5);
 }
 
-.timezone-modal input {
+input {
     background: transparent;
     border: none;
     outline: 0;
@@ -69,7 +72,18 @@ export default {
 #timezone-time {
     font-size: $font-size-large;
     font-weight: $bold-weight;
-    width: 100%;
+    color: $font-color;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#timezone-time>.editable-field {
+    font-size: $font-size-large;
+    font-weight: $bold-weight;
+    width: 30%;
 }
 
 #timezone-name {
