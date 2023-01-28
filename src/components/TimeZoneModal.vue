@@ -13,10 +13,12 @@
 <script>
 import { ref } from 'vue'
 import {initializeLocalTime} from "../services/time/time-manager.js"
+import {useStore} from "vuex"
 export default {
     props: ['region'],
     setup(props) {
-        const regionTime = initializeLocalTime(props.region)
+        const store = useStore()
+        const regionTime = initializeLocalTime(props.region,store.getters.getBaseTime)
         const timezone = ref(regionTime.timezone)
         const date = ref(regionTime.date)
         const year = ref(regionTime.year)

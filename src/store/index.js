@@ -2,14 +2,19 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    baseTime:null,
-    baseTimeZone:null,
+    baseTime: new Date(),
     timeBoxLists:[],
   },
   mutations: {
+    setNewBaseTime(state, {newBaseTime}) {
+      state.baseTime = newBaseTime
+    }
   },
   actions: {
   },
-  modules: {
+  getters: {
+    getBaseTime (state) {
+      return state.baseTime
+   }
   }
 })
