@@ -1,28 +1,32 @@
 <template>
-        <div class="country-modal-container">
+        <div class="region-modal-container">
             <div v-for="modal in modals" :key="modal.index">
-                <TimeZoneModal :country="modal.country" class="time-zone-modal" />
+                <TimeZoneModal :region="modal.region" class="time-zone-modal" />
             </div>
         </div>
-        <form class="add-country" @submit.prevent="handleAddCountry">
+        <form class="add-region" @submit.prevent="handleAddRegion">
             <button>Add</button>
-            <input type="text" v-model="countryName" class="add-button" placeholder="Country Code" />
+            <input type="text" v-model="regionName" class="add-button" placeholder="region Code" />
         </form>
 </template>
 
 <script>
 import TimeZoneModal from './TimeZoneModal.vue'
 import { ref } from 'vue'
+import {findTimeZone} from "../services/time/time-manager.js"
 export default {
     name: TimeZoneModal,
     setup() {
-        const countryName = ref('')
-        
-        const modals = ref([{ index: 0, country: "JP" }])//base time
-        const handleAddCountry = () => {
-            modals.value.push({ index: modals.value.length - 1, country: countryName.value })
+        const regionName = ref('')
+        const modals = ref([{ index: 0, region: "Japan" }])
+        const handleAddRegion = () => {
+            if(findTimeZone(regionName.value) === null){
+                alert('Invalid region')
+            }else {
+                modals.value.push({ index: modals.value.length - 1, region: regionName.value })
+            }
         }
-        return { handleAddCountry, countryName, modals }
+        return { handleAddRegion, regionName, modals }
     },
     components: {
         TimeZoneModal
@@ -40,7 +44,7 @@ export default {
     background-size: cover;
 }
 
-.country-modal-container {
+.region-modal-container {
     min-width: 100vw;
     min-height: 80vh;
     display: flex;
@@ -48,7 +52,7 @@ export default {
     justify-content: center;
 }
 
-.add-country {
+.add-region {
     text-align: center;
     vertical-align: bottom;
 }

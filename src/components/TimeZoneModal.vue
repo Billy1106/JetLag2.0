@@ -12,11 +12,11 @@
     
 <script>
 import { ref } from 'vue'
-import initializeLocalTime from "../services/time/time-provider.js"
+import {initializeLocalTime} from "../services/time/time-manager.js"
 export default {
-    props: ['country'],
+    props: ['region'],
     setup(props) {
-        const regionTime = initializeLocalTime(props.country)
+        const regionTime = initializeLocalTime(props.region)
         const timezone = ref(regionTime.timezone)
         const date = ref(regionTime.date)
         const year = ref(regionTime.year)
