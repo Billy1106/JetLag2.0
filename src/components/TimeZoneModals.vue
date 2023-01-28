@@ -13,17 +13,20 @@
 <script>
 import TimeZoneModal from './TimeZoneModal.vue'
 import { ref } from 'vue'
-import {findTimeZone} from "../services/time/time-manager.js"
+import {findTimeZone, getTimezoneByDate} from "../services/time/time-manager.js"
+import { useStore } from "vuex"
 export default {
     name: TimeZoneModal,
     setup() {
+        const store = useStore()
         const regionName = ref('')
-        const modals = ref([{ index: 0, region: "Japan" }])
+        console.log(getTimezoneByDate(store.getters.getBaseTime))
+        const modals = ref([{ index: 0, region: getTimezoneByDate(store.getters.getBaseTime)}])
         const handleAddRegion = () => {
             if(findTimeZone(regionName.value) === null){
                 alert('Invalid region')
             }else {
-                modals.value.push({ index: modals.value.length - 1, region: regionName.value })
+                modals.value.push({ index: modals.value.length - 1, region: findTimeZone(regionName.value) })
             }
         }
         return { handleAddRegion, regionName, modals }
