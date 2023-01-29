@@ -2,41 +2,46 @@
 <template>
     <div class="timezone-modal">
         <div id="timezone-date-year-container">
-            <input id="timezone-date" class="editable-field" v-model="date" />
+            <div id="timezone-date">
+                <input id="timezone-hour" class="editable-field" v-model="month" />/<input id="timezone-minutes" class="editable-field" v-model="day" />
+            </div>
             <input id="timezone-year" class="editable-field" v-model="year" />
         </div>
-        <input id="timezone-time" class="editable-field" v-model="time" />
+        <div id="timezone-time">
+            <input id="timezone-hour" class="editable-field" v-model="hour" />:<input id="timezone-minutes" class="editable-field" v-model="minutes" />
+        </div>
         <input id="timezone-name" class="editable-field" v-model="timezone" />
     </div>
 </template>
     
 <script>
 import { ref } from 'vue'
-import * as ct from "countries-and-timezones";
+import { initializeLocalTime } from "../services/time/time-manager.js"
+import { useStore } from "vuex"
 export default {
-    props: ['country'],
+    props: ['region'],
     setup(props) {
-        const ctCountry = ct.getCountry(props.country)
-        if(ctCountry === null){
-            return
-        }
-        const getInitialTime = () => {
-            const getInitialTimeZone = ct.getTimezone(ctCountry.timezones[0]).utcOffset
-            const utc = new Date().toUTCString();
-            const gDate = new Date(utc.replace('GMT', ''));
-            const hours = gDate.getHours();
-            gDate.setHours(hours + getInitialTimeZone / 60);
-            return gDate.toString();
-        }
-   
-        const timezone = ref(ctCountry.timezones[0])
-        const currentDate = new Date(getInitialTime())
-        const date = ref(String(currentDate.getMonth() + 1).padStart(2, '0') + "/" + String(currentDate.getDate()).padStart(2, '0'))
-        const year = ref(currentDate.getFullYear())
-        const localTime = currentDate.toLocaleTimeString();
-        const time = ref(localTime.substring(0, localTime.length - 3));
+        const store = useStore()
+        const regionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
+        const timezone = ref(regionTime.timezone)
+        const date = ref(regionTime.date)
+        const month = ref(regionTime.month)
+        const day = ref(regionTime.day)
+        const year = ref(regionTime.year)
+        const hour = ref(regionTime.hour);
+        const minutes = ref(regionTime.minutes)
+        // watch([hour, minutes], ([newHour, newMinutes], [prevHours, prevMinutes]) => {
+        //     const baseTime = store.getters.getBaseTime
+        //     if(newHour !== prevHours) {
+        //         convertToBaseTime(regionTime,baseTime)
+        //     }
+        //     if(newMinutes !== prevMinutes) {
+        //         baseTime.setMinutes(parseInt(newMinutes))
+        //         store.commit("setBaseTime",baseTime)
+        //     }
+        // })
 
-        return { date, year, time, timezone }
+        return { date, year, timezone, hour, minutes, month, day }
     }
 }
 </script>
@@ -57,7 +62,7 @@ export default {
     box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .5);
 }
 
-.timezone-modal input {
+input {
     background: transparent;
     border: none;
     outline: 0;
@@ -81,7 +86,36 @@ export default {
 #timezone-time {
     font-size: $font-size-large;
     font-weight: $bold-weight;
-    width: 100%;
+    color: $font-color;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#timezone-time>.editable-field {
+    font-size: $font-size-large;
+    font-weight: $bold-weight;
+    width: 30%;
+}
+
+#timezone-date {
+    font-size: $font-size-small;
+    font-weight: $bold-weight;
+    color: $font-color;
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#timezone-date>.editable-field {
+    font-size: $font-size-medium;
+    font-weight: $bold-weight;
+    width: 30%;
 }
 
 #timezone-name {
