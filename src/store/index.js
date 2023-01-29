@@ -6,7 +6,7 @@ export default createStore({
     timeBoxLists:[],
   },
   mutations: {
-    setNewBaseTime(state, {newBaseTime}) {
+    setBaseTime(state, newBaseTime) {
       state.baseTime = newBaseTime
     }
   },

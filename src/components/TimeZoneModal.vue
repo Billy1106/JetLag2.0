@@ -2,7 +2,9 @@
 <template>
     <div class="timezone-modal">
         <div id="timezone-date-year-container">
-            <input id="timezone-date" class="editable-field" v-model="date" />
+            <div id="timezone-date">
+                <input id="timezone-hour" class="editable-field" v-model="month" />/<input id="timezone-minutes" class="editable-field" v-model="day" />
+            </div>
             <input id="timezone-year" class="editable-field" v-model="year" />
         </div>
         <div id="timezone-time">
@@ -23,11 +25,23 @@ export default {
         const regionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
         const timezone = ref(regionTime.timezone)
         const date = ref(regionTime.date)
+        const month = ref(regionTime.month)
+        const day = ref(regionTime.day)
         const year = ref(regionTime.year)
         const hour = ref(regionTime.hour);
         const minutes = ref(regionTime.minutes)
+        // watch([hour, minutes], ([newHour, newMinutes], [prevHours, prevMinutes]) => {
+        //     const baseTime = store.getters.getBaseTime
+        //     if(newHour !== prevHours) {
+        //         convertToBaseTime(regionTime,baseTime)
+        //     }
+        //     if(newMinutes !== prevMinutes) {
+        //         baseTime.setMinutes(parseInt(newMinutes))
+        //         store.commit("setBaseTime",baseTime)
+        //     }
+        // })
 
-        return { date, year, timezone, hour, minutes }
+        return { date, year, timezone, hour, minutes, month, day }
     }
 }
 </script>
@@ -82,6 +96,24 @@ input {
 
 #timezone-time>.editable-field {
     font-size: $font-size-large;
+    font-weight: $bold-weight;
+    width: 30%;
+}
+
+#timezone-date {
+    font-size: $font-size-small;
+    font-weight: $bold-weight;
+    color: $font-color;
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#timezone-date>.editable-field {
+    font-size: $font-size-medium;
     font-weight: $bold-weight;
     width: 30%;
 }

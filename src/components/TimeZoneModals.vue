@@ -20,7 +20,7 @@ export default {
     setup() {
         const store = useStore()
         const regionName = ref('')
-        const modals = ref([{ index: 0, region: getTimezoneByDate(store.getters.getBaseTime)}])
+        const modals = ref([{ index: 0, region: getTimezoneByDate(store.getters.getBaseTime)}])//store timezone name e.g Asia/Tokyo
         const handleAddRegion = () => {
             if(findTimeZone(regionName.value) === null){
                 alert('Invalid region')
