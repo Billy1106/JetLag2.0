@@ -24,7 +24,6 @@ export default {
         const store = useStore()
         const regionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
         const timezone = ref(regionTime.timezone)
-        const date = ref(regionTime.date)
         const month = ref(regionTime.month)
         const day = ref(regionTime.day)
         const year = ref(regionTime.year)
