@@ -3,44 +3,40 @@
     <div class="timezone-modal">
         <div id="timezone-date-year-container">
             <div id="timezone-date">
-                <input id="timezone-hour" class="editable-field" v-model="month" />/<input id="timezone-minutes" class="editable-field" v-model="day" />
+                <input id="timezone-hour" class="editable-field" v-model="modal.month" />/<input id="timezone-minutes" class="editable-field" v-model="modal.day" />
             </div>
-            <input id="timezone-year" class="editable-field" v-model="year" />
+            <input id="timezone-year" class="editable-field" v-model="modal.year" />
         </div>
         <div id="timezone-time">
-            <input id="timezone-hour" class="editable-field" v-model="hour" />:<input id="timezone-minutes" class="editable-field" v-model="minutes" />
+            <input id="timezone-hour" class="editable-field" v-model="modal.hour" />:<input id="timezone-minutes" class="editable-field" v-model="modal.minutes" />
         </div>
-        <input id="timezone-name" class="editable-field" v-model="timezone" />
+        <input id="timezone-name" class="editable-field" v-model="modal.timezone" />
     </div>
 </template>
     
 <script>
-import { ref } from 'vue'
-import { initializeLocalTime } from "../services/time/time-manager.js"
+import { ref, watch } from 'vue'
+import { initializeLocalTime,convertToBaseTime } from "../services/time/time-manager.js"
 import { useStore } from "vuex"
 export default {
     props: ['region'],
     setup(props) {
         const store = useStore()
         const regionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
-        const timezone = ref(regionTime.timezone)
-        const month = ref(regionTime.month)
-        const day = ref(regionTime.day)
-        const year = ref(regionTime.year)
-        const hour = ref(regionTime.hour);
-        const minutes = ref(regionTime.minutes)
-        // watch([hour, minutes], ([newHour, newMinutes], [prevHours, prevMinutes]) => {
-        //     const baseTime = store.getters.getBaseTime
-        //     if(newHour !== prevHours) {
-        //         convertToBaseTime(regionTime,baseTime)
-        //     }
-        //     if(newMinutes !== prevMinutes) {
-        //         baseTime.setMinutes(parseInt(newMinutes))
-        //         store.commit("setBaseTime",baseTime)
-        //     }
-        // })
-
-        return { date, year, timezone, hour, minutes, month, day }
+        const modal = ref({
+            timezone:(regionTime.timezone),
+            month:(regionTime.month),
+            day:(regionTime.day),
+            year:(regionTime.year),
+            hour:(regionTime.hour),
+            minutes:(regionTime.minutes),
+            time:regionTime.time
+        })
+        watch(modal.value,() => {
+            const newBaseTime = convertToBaseTime(modal.value,store.getters.getBaseTime)
+            store.commit('setBaseTime',newBaseTime)
+        })
+        return { modal }
     }
 }
 </script>
