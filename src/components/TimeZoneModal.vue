@@ -40,7 +40,7 @@ export default {
         //     }
         // })
 
-        return { date, year, timezone, hour, minutes, month, day }
+        return { year, timezone, hour, minutes, month, day }
     }
 }
 </script>
