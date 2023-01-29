@@ -19,11 +19,12 @@ export const findTimeZone = (region) => {//returns timezone of region e.g Asia/T
 
     return null
 }
-// export const convertToBaseTime = (regionTime,baseTime) => {//convert argument time to the baseTime ( utc:-7: timezone = 'America/Edmonton',)
-//     // const regionDate = new Date(regionTime.year,regionTime.)
-   
-//     return null
-// }
+export const convertToBaseTime = (regionTime,baseTime) => {//convert argument time to the baseTime ( utc:-7: timezone = 'America/Edmonton',)
+    const timeDifference = -1 * ct.getTimezone(regionTime.timezone).utcOffset - baseTime.getTimezoneOffset()
+    const newLocalTime = new Date(regionTime.year,regionTime.month - 1,regionTime.day,regionTime.hour,regionTime.minutes,0,0);
+    const newBaseTime = new Date(newLocalTime.getTime() + timeDifference * 60 * 1000)
+    return newBaseTime
+}
 export const getDateOfTimeZone = (regionTimezone,baseTime) =>{//create date instance of specified timezone and its time
     const getInitialTimeZone = ct.getTimezone(regionTimezone).utcOffset
     const utc = baseTime.toUTCString();
@@ -53,7 +54,8 @@ export const initializeLocalTime = (region, baseTime = new Date()) =>{
         day: String(currentDate.getDate()).padStart(2, '0'),
         year:currentDate.getFullYear(),
         hour: time[0].padStart(2, '0'),
-        minutes: time[1].padStart(2, '0')
+        minutes: time[1].padStart(2, '0'),
+        time:currentDate.getTime()
     }
     return regionTime;
 
