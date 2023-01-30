@@ -13,19 +13,25 @@
 <script>
 import TimeZoneModal from './TimeZoneModal.vue'
 import { ref } from 'vue'
-import {findTimeZone, getTimezoneByDate} from "../services/time/time-manager.js"
+import {findTimeZone, getTimezoneByDate, initializeLocalTime} from "../services/time/time-manager.js"
 import { useStore } from "vuex"
 export default {
     name: TimeZoneModal,
     setup() {
         const store = useStore()
         const regionName = ref('')
-        const modals = ref([{ index: 0, region: getTimezoneByDate(store.getters.getBaseTime)}])//store timezone name e.g Asia/Tokyo
+        const localTimezone = getTimezoneByDate(store.getters.getBaseTime)
+        const initialModal = { index: 0, region: localTimezone, time:initializeLocalTime(localTimezone, store.getters.getBaseTime)};
+        const modals = ref([initialModal])//store timezone name e.g Asia/Tokyo
+        store.commit('addTimeBox',initialModal)
         const handleAddRegion = () => {
-            if(findTimeZone(regionName.value) === null){
+            const newTimezone = findTimeZone(regionName.value)
+            if(newTimezone === null){
                 alert('Invalid region')
             }else {
-                modals.value.push({ index: modals.value.length - 1, region: findTimeZone(regionName.value) })
+                const newModal = { index: modals.value.length - 1, region: newTimezone, time:initializeLocalTime(newTimezone, store.getters.getBaseTime) }
+                modals.value.push(newModal)
+                store.commit('addTimeBox',newModal)
             }
         }
         return { handleAddRegion, regionName, modals }
