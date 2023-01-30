@@ -8,6 +8,9 @@ export default createStore({
   mutations: {
     setBaseTime(state, newBaseTime) {
       state.baseTime = newBaseTime
+    },
+    addTimeBox(state, newTimeBox) {
+      state.timeBoxLists.push(newTimeBox)
     }
   },
   actions: {
