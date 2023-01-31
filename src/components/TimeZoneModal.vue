@@ -19,7 +19,7 @@ import { ref, watch } from 'vue'
 import { initializeLocalTime,convertToBaseTime } from "../services/time/time-manager.js"
 import { useStore } from "vuex"
 export default {
-    props: ['region'],
+    props: ['region','index'],
     setup(props) {
         const store = useStore()
         const regionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
@@ -33,8 +33,12 @@ export default {
             time:regionTime.time
         })
         watch(modal.value,() => {
-            const newBaseTime = convertToBaseTime(modal.value,store.getters.getBaseTime)
-            store.commit('setBaseTime',newBaseTime)
+            const isAlreadyUpToDate = store.getters.getTimeBoxList[props.index].time === modal.value.time
+            if(!isAlreadyUpToDate){
+                const newBaseTime = convertToBaseTime(modal.value,store.getters.getBaseTime)
+                store.commit('setBaseTime',newBaseTime)
+                store.commit('updateCurrentTimeInTimeBaseList')
+            }
         })
         return { modal }
     }
