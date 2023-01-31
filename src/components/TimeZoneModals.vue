@@ -1,7 +1,7 @@
 <template>
         <div class="region-modal-container">
             <div v-for="modal in modals" :key="modal.index">
-                <TimeZoneModal :region="modal.region" class="time-zone-modal" />
+                <TimeZoneModal :region="modal.region" :index="modal.index" class="time-zone-modal" />
             </div>
         </div>
         <form class="add-region" @submit.prevent="handleAddRegion">

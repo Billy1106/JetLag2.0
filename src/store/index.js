@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import { initializeLocalTime } from "../services/time/time-manager.js"
 
 export default createStore({
   state: {
@@ -11,6 +12,11 @@ export default createStore({
     },
     addTimeBox(state, newTimeBox) {
       state.timeBoxLists.push(newTimeBox)
+    },
+    updateCurrentTimeInTimeBaseList(state){
+      for(let timeBox of state.timeBoxLists) {
+        timeBox.time = initializeLocalTime(timeBox.region,state.baseTime)
+      }
     }
   },
   actions: {
@@ -18,6 +24,9 @@ export default createStore({
   getters: {
     getBaseTime (state) {
       return state.baseTime
-   }
+   },
+   getTimeBoxList (state) {
+    return state.timeBoxLists
+ }
   }
 })
