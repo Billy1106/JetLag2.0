@@ -3,44 +3,62 @@
     <div class="timezone-modal">
         <div id="timezone-date-year-container">
             <div id="timezone-date">
-                <input id="timezone-hour" class="editable-field" v-model="modal.month" />/<input id="timezone-minutes" class="editable-field" v-model="modal.day" />
+                <input id="timezone-hour" class="editable-field" v-model="modal.month" @input="handleTimeUpdated" />/<input id="timezone-minutes"
+                    class="editable-field" v-model="modal.day" @input="handleTimeUpdated" />
             </div>
-            <input id="timezone-year" class="editable-field" v-model="modal.year" />
+            <input id="timezone-year" class="editable-field" v-model="modal.year" @input="handleTimeUpdated" />
         </div>
         <div id="timezone-time">
-            <input id="timezone-hour" class="editable-field" v-model="modal.hour" />:<input id="timezone-minutes" class="editable-field" v-model="modal.minutes" />
+            <input id="timezone-hour" class="editable-field" v-model="modal.hour" @input="handleTimeUpdated" />:<input
+                id="timezone-minutes" class="editable-field" v-model="modal.minutes" @input="handleTimeUpdated" />
         </div>
-        <input id="timezone-name" class="editable-field" v-model="modal.timezone" />
+        <input id="timezone-name" class="editable-field" v-model="modal.timezone" >
     </div>
 </template>
     
 <script>
 import { ref, watch } from 'vue'
-import { initializeLocalTime,convertToBaseTime } from "../services/time/time-manager.js"
+import { initializeLocalTime, convertToBaseTime } from "../services/time/time-manager.js"
 import { useStore } from "vuex"
 export default {
-    props: ['region','index'],
+    props: ['region', 'index'],
     setup(props) {
         const store = useStore()
         const regionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
-        const modal = ref({
-            timezone:(regionTime.timezone),
-            month:(regionTime.month),
-            day:(regionTime.day),
-            year:(regionTime.year),
-            hour:(regionTime.hour),
-            minutes:(regionTime.minutes),
-            time:regionTime.time
+        let modal = ref({
+            timezone: (regionTime.timezone),
+            month: (regionTime.month),
+            day: (regionTime.day),
+            year: (regionTime.year),
+            hour: (regionTime.hour),
+            minutes: (regionTime.minutes),
+            time: regionTime.time
         })
-        watch(modal.value,() => {
+        const handleTimeUpdated = () => {
             const isAlreadyUpToDate = store.getters.getTimeBoxList[props.index].time === modal.value.time
-            if(!isAlreadyUpToDate){
-                const newBaseTime = convertToBaseTime(modal.value,store.getters.getBaseTime)
-                store.commit('setBaseTime',newBaseTime)
-                store.commit('updateCurrentTimeInTimeBaseList')
+            if (!isAlreadyUpToDate) {
+                const newBaseTime = convertToBaseTime(modal.value, store.getters.getBaseTime)
+                store.commit('setBaseTime', newBaseTime)
             }
-        })
-        return { modal }
+        }
+        const updateModal = () =>{
+            const newRegionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
+            store.commit('updateCurrentTimeInTimeBaseList', props.index)
+            modal.value = {
+                timezone: (newRegionTime.timezone),
+                month: (newRegionTime.month),
+                day: (newRegionTime.day),
+                year: (newRegionTime.year),
+                hour: (newRegionTime.hour),
+                minutes: (newRegionTime.minutes),
+                time: newRegionTime.time
+            }
+            // return modal
+        }
+        
+        watch(() => store.state.baseTime,updateModal)//check why updateModal needs to be callback function
+
+        return { modal, handleTimeUpdated }
     }
 }
 </script>
