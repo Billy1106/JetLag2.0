@@ -1,19 +1,19 @@
 <template>
-        <div class="region-modal-container">
-            <div v-for="modal in modals" :key="modal.index">
-                <TimeZoneModal :region="modal.region" :index="modal.index" class="time-zone-modal" />
-            </div>
+    <div class="region-modal-container">
+        <div v-for="modal in modals" :key="modal">
+            <TimeZoneModal :region="modal.region" :index="modal.index" />
         </div>
-        <form class="add-region" @submit.prevent="handleAddRegion">
-            <button>Add</button>
-            <input type="text" v-model="regionName" class="add-button" placeholder="region Code" />
-        </form>
+    </div>
+    <form class="add-region" @submit.prevent="handleAddRegion">
+        <button>Add</button>
+        <input type="text" v-model="regionName" class="add-button" placeholder="region Code" />
+    </form>
 </template>
 
 <script>
 import TimeZoneModal from './TimeZoneModal.vue'
 import { ref } from 'vue'
-import {findTimeZone, getTimezoneByDate, initializeLocalTime} from "../services/time/time-manager.js"
+import { findTimeZone, getTimezoneByDate, initializeLocalTime } from "../services/time/time-manager.js"
 import { useStore } from "vuex"
 export default {
     name: TimeZoneModal,
@@ -21,20 +21,20 @@ export default {
         const store = useStore()
         const regionName = ref('')
         const localTimezone = getTimezoneByDate(store.getters.getBaseTime)
-        const initialModal = { index: 0, region: localTimezone, time:initializeLocalTime(localTimezone, store.getters.getBaseTime)};
+        const initialModal = { index: 0, region: localTimezone, time: initializeLocalTime(localTimezone, store.getters.getBaseTime) };
         const modals = ref([initialModal])//store timezone name e.g Asia/Tokyo
-        store.commit('addTimeBox',initialModal)
+        store.commit('addTimeBox', initialModal)
         const handleAddRegion = () => {
             const newTimezone = findTimeZone(regionName.value)
-            if(newTimezone === null){
+            if (newTimezone === null) {
                 alert('Invalid region')
-            }else {
-                const newModal = { index: modals.value.length - 1, region: newTimezone, time:initializeLocalTime(newTimezone, store.getters.getBaseTime) }
+            } else {
+                const newModal = { index: modals.value.length, region: newTimezone, time: initializeLocalTime(newTimezone, store.getters.getBaseTime) }
                 modals.value.push(newModal)
-                store.commit('addTimeBox',newModal)
+                store.commit('addTimeBox', newModal)
             }
         }
-        return { handleAddRegion, regionName, modals }
+        return { handleAddRegion, regionName, modals }     
     },
     components: {
         TimeZoneModal
@@ -84,8 +84,13 @@ button {
     font-family: $body-font-family;
 }
 
-.time-zone-modal {
+.timezone-modal {
     margin: $timezone-margin;
+}
+
+.moveable {
+    border:none;
+    position: absolute;
 }
 
 ::placeholder {

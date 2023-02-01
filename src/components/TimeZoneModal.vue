@@ -1,18 +1,23 @@
 
 <template>
-    <div class="timezone-modal">
-        <div id="timezone-date-year-container">
-            <div id="timezone-date">
-                <input id="timezone-hour" class="editable-field" v-model="modal.month" @input="handleTimeUpdated" />/<input id="timezone-minutes"
-                    class="editable-field" v-model="modal.day" @input="handleTimeUpdated" />
+    <div>
+        <div class="timezone-modal" :id="targetElement">
+            <div id="timezone-date-year-container">
+                <div id="timezone-date">
+                    <input id="timezone-hour" class="editable-field" v-model="modal.month"
+                        @input="handleTimeUpdated" />/<input id="timezone-minutes" class="editable-field"
+                        v-model="modal.day" @input="handleTimeUpdated" />
+                </div>
+                <input id="timezone-year" class="editable-field" v-model="modal.year" @input="handleTimeUpdated" />
             </div>
-            <input id="timezone-year" class="editable-field" v-model="modal.year" @input="handleTimeUpdated" />
+            <div id="timezone-time">
+                <input id="timezone-hour" class="editable-field" v-model="modal.hour"
+                    @input="handleTimeUpdated" />:<input id="timezone-minutes" class="editable-field"
+                    v-model="modal.minutes" @input="handleTimeUpdated" />
+            </div>
+            <input id="timezone-name" class="editable-field" v-model="modal.timezone">
         </div>
-        <div id="timezone-time">
-            <input id="timezone-hour" class="editable-field" v-model="modal.hour" @input="handleTimeUpdated" />:<input
-                id="timezone-minutes" class="editable-field" v-model="modal.minutes" @input="handleTimeUpdated" />
-        </div>
-        <input id="timezone-name" class="editable-field" v-model="modal.timezone" >
+        <Moveable v-bind="moveable" @drag="handleDrag" />
     </div>
 </template>
     
@@ -20,10 +25,16 @@
 import { ref, watch } from 'vue'
 import { initializeLocalTime, convertToBaseTime } from "../services/time/time-manager.js"
 import { useStore } from "vuex"
+import Moveable from 'vue3-moveable'
 export default {
-    props: ['region', 'index'],
+    props: ['region', 'index','is_edit_mode'],
+    name: Moveable,
     setup(props) {
         const store = useStore()
+        const id = ref(props.index)
+        const targetElement = "draggable-area" + id.value
+        console.log(targetElement)
+        const moveable = ref({ target: ["#"+targetElement+".timezone-modal"], draggable: false, origin: false,zoom:0 })
         const regionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
         let modal = ref({
             timezone: (regionTime.timezone),
@@ -41,7 +52,7 @@ export default {
                 store.commit('setBaseTime', newBaseTime)
             }
         }
-        const updateModal = () =>{
+        const updateModal = () => {
             const newRegionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
             store.commit('updateCurrentTimeInTimeBaseList', props.index)
             modal.value = {
@@ -53,12 +64,16 @@ export default {
                 minutes: (newRegionTime.minutes),
                 time: newRegionTime.time
             }
-            // return modal
         }
-        
-        watch(() => store.state.baseTime,updateModal)//check why updateModal needs to be callback function
 
-        return { modal, handleTimeUpdated }
+        const handleDrag = ({ target, transform }) => {
+            target.style.transform = transform;
+        }
+        watch(() => store.state.baseTime, updateModal)//check why updateModal needs to be callback function
+        return { modal, handleTimeUpdated, handleDrag, moveable, targetElement }
+    },
+    components: {
+        Moveable
     }
 }
 </script>
@@ -77,6 +92,10 @@ export default {
     justify-content: center;
     border-radius: $timezone-radius;
     box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .5);
+}
+
+.draggable-part {
+    position: absolute;
 }
 
 input {
@@ -138,6 +157,6 @@ input {
 #timezone-name {
     font-size: $font-size-small;
     font-weight: $bold-weight;
-    width: 100%;
+    width: 80%;
 }
 </style>
