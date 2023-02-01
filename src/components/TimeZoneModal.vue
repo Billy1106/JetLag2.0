@@ -27,14 +27,14 @@ import { initializeLocalTime, convertToBaseTime } from "../services/time/time-ma
 import { useStore } from "vuex"
 import Moveable from 'vue3-moveable'
 export default {
-    props: ['region', 'index','is_edit_mode'],
+    props: ['region', 'index', 'isEditable'],
     name: Moveable,
     setup(props) {
         const store = useStore()
         const id = ref(props.index)
         const targetElement = "draggable-area" + id.value
-        console.log(targetElement)
-        const moveable = ref({ target: ["#"+targetElement+".timezone-modal"], draggable: false, origin: false,zoom:0 })
+        let moveable = ref({ target: ["#" + targetElement + ".timezone-modal"], draggable: false, origin: false, zoom: 0 })
+
         const regionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
         let modal = ref({
             timezone: (regionTime.timezone),
@@ -66,10 +66,17 @@ export default {
             }
         }
 
+        const switchEditMode = () => {
+            moveable.value.draggable = props.isEditable
+        }
+
+
         const handleDrag = ({ target, transform }) => {
             target.style.transform = transform;
         }
         watch(() => store.state.baseTime, updateModal)//check why updateModal needs to be callback function
+        watch(() => props.isEditable, switchEditMode)
+
         return { modal, handleTimeUpdated, handleDrag, moveable, targetElement }
     },
     components: {
