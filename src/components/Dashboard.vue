@@ -1,6 +1,6 @@
 
 <template>
-    <div class="dashboard">
+    <div class="dashboard bg" background="src/assets/background.png" >
         <TimeZoneModals />
 
     </div>
@@ -25,4 +25,10 @@ export default {
     background-color: $dashboard-background-color;
     background-size: cover;
 }
+
+.bg {
+    background-image: url("../assets/background-opacity-20.png");
+    background-position: center;
+    background-size: cover;
+  }
 </style>
