@@ -1,19 +1,26 @@
 <template>
-        <div class="region-modal-container">
-            <div v-for="modal in modals" :key="modal.index">
-                <TimeZoneModal :region="modal.region" :index="modal.index" class="time-zone-modal" />
-            </div>
+    <div class="region-modal-container">
+        <div v-for="modal in modals" :key="modal">
+            <TimeZoneModal :region="modal.region" :index="modal.index" :isEditable="editable" />
         </div>
+    </div>
+    <div class="input-form">
         <form class="add-region" @submit.prevent="handleAddRegion">
-            <button>Add</button>
-            <input type="text" v-model="regionName" class="add-button" placeholder="region Code" />
+            <button :disabled="editable">Add</button>
+            <input type="text" v-model="regionName" class="add-button" placeholder="region" :disabled="editable" />
         </form>
+        <div class="editable-button">
+            <button type="button" id="edit-button" @click="handleEditButton">{{
+                editable?'Add mode': 'Edit mode'
+            }}</button>
+        </div>
+    </div>
 </template>
 
 <script>
 import TimeZoneModal from './TimeZoneModal.vue'
 import { ref } from 'vue'
-import {findTimeZone, getTimezoneByDate, initializeLocalTime} from "../services/time/time-manager.js"
+import { findTimeZone, getTimezoneByDate, initializeLocalTime } from "../services/time/time-manager.js"
 import { useStore } from "vuex"
 export default {
     name: TimeZoneModal,
@@ -21,20 +28,28 @@ export default {
         const store = useStore()
         const regionName = ref('')
         const localTimezone = getTimezoneByDate(store.getters.getBaseTime)
-        const initialModal = { index: 0, region: localTimezone, time:initializeLocalTime(localTimezone, store.getters.getBaseTime)};
+        const initialModal = { index: 0, region: localTimezone, time: initializeLocalTime(localTimezone, store.getters.getBaseTime) };
         const modals = ref([initialModal])//store timezone name e.g Asia/Tokyo
-        store.commit('addTimeBox',initialModal)
+        store.commit('addTimeBox', initialModal)
+
+        let editable = ref(false);
+
         const handleAddRegion = () => {
             const newTimezone = findTimeZone(regionName.value)
-            if(newTimezone === null){
+            if (newTimezone === null) {
                 alert('Invalid region')
-            }else {
-                const newModal = { index: modals.value.length - 1, region: newTimezone, time:initializeLocalTime(newTimezone, store.getters.getBaseTime) }
+            } else {
+                const newModal = { index: modals.value.length, region: newTimezone, time: initializeLocalTime(newTimezone, store.getters.getBaseTime) }
                 modals.value.push(newModal)
-                store.commit('addTimeBox',newModal)
+                store.commit('addTimeBox', newModal)
             }
         }
-        return { handleAddRegion, regionName, modals }
+
+        const handleEditButton = () => {
+            editable.value = !editable.value
+        }
+
+        return { handleAddRegion, regionName, modals, handleEditButton, editable }
     },
     components: {
         TimeZoneModal
@@ -60,32 +75,50 @@ export default {
     justify-content: center;
 }
 
+.input-form {
+    text-align: center;
+    vertical-align: bottom;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
 .add-region {
     text-align: center;
     vertical-align: bottom;
 }
 
+.editable-button {
+    margin-top: 10%;
+    text-align: center;
+}
+
 .add-button {
-    background: transparent;
     border: none;
     border-bottom: solid white 1px;
     outline: 0;
-    font-weight: $bold-weight;
-    font-family: $body-font-family;
-    color: $font-color;
 }
 
 button {
     background: transparent;
     border: none;
     color: $font-color;
-    size: $font-size-medium;
-    font-weight: $bold-weight;
+    size: $font-size-large;
+    font-weight: $light-weight;
     font-family: $body-font-family;
+    transition: 0.3s
 }
 
-.time-zone-modal {
+button:hover {
+    opacity: 0.5;
+}
+
+.timezone-modal {
     margin: $timezone-margin;
+}
+
+.moveable {
+    border: none;
+    position: absolute;
 }
 
 ::placeholder {

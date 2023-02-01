@@ -1,10 +1,11 @@
 $resize-factor:0.5;
 $body-font-family: 'Inter';
-$semibold-weight: 600;
+$light-weight: 300;
+$semibold-weight: 500;
 $bold-weight:     700;
 $xbold-weight:    800;
-$font-size-medium: $resize-factor * 36px;
 $font-size-large: $resize-factor * 96px;
+$font-size-medium: $resize-factor * 36px;
 $font-size-small: $resize-factor * 24px;
 $font-color: white;
 $dashboard-background-color: #85DCBA;
