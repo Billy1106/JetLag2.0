@@ -27,7 +27,7 @@ export default {
 }
 
 .bg {
-    background-image: url("../assets/background-opacity-20.png");
+    background-image: url("../assets/background.png");
     background-position: center;
     background-size: cover;
   }
