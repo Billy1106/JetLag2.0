@@ -1,23 +1,24 @@
 
 <template>
-<div class="dashboard">
-    <TimeZoneModals/>
+    <div class="dashboard">
+        <TimeZoneModals />
 
-</div>
+    </div>
 </template>
 
 <script>
 import TimeZoneModals from './TimeZoneModals.vue'
 export default {
-    name:TimeZoneModals,
+    name: TimeZoneModals,
     components: {
-    TimeZoneModals
-  }
+        TimeZoneModals
+    }
 }
 </script>
 
 <style lang="scss">
 @import 'src/assets/variables.scss';
+
 .dashboard {
     min-width: 100vw;
     min-height: 100vh;
@@ -25,4 +26,3 @@ export default {
     background-size: cover;
 }
 </style>
-  
