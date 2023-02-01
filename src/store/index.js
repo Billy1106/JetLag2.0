@@ -17,6 +17,9 @@ export default createStore({
       for(let timeBox of state.timeBoxLists) {
         timeBox.time = initializeLocalTime(timeBox.region,state.baseTime)
       }
+    },
+    updateCurrentTimeOfIndexList(state,index){
+      state.timeBoxLists[index].time = initializeLocalTime(state.timeBoxLists.region,state.baseTime)
     }
   },
   actions: {
