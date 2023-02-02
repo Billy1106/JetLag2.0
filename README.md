@@ -1,4 +1,4 @@
-# simple-td-calculator
+# jetlag
 
 ## Scoping Document (in Japanese)
 ```

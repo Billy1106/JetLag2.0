@@ -1,28 +1,34 @@
 
 <template>
-<div class="dashboard">
-    <TimeZoneModals/>
+    <div class="dashboard bg" background="src/assets/background.png" >
+        <TimeZoneModals />
 
-</div>
+    </div>
 </template>
 
 <script>
 import TimeZoneModals from './TimeZoneModals.vue'
 export default {
-    name:TimeZoneModals,
+    name: TimeZoneModals,
     components: {
-    TimeZoneModals
-  }
+        TimeZoneModals
+    }
 }
 </script>
 
 <style lang="scss">
 @import 'src/assets/variables.scss';
+
 .dashboard {
     min-width: 100vw;
     min-height: 100vh;
     background-color: $dashboard-background-color;
     background-size: cover;
 }
+
+.bg {
+    background-image: url("../assets/background.png");
+    background-position: center;
+    background-size: cover;
+  }
 </style>
-  
