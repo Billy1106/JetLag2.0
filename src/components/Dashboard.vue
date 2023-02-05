@@ -1,6 +1,6 @@
 
 <template>
-    <div class="dashboard bg" background="src/assets/background.png" >
+    <div class="dashboard bg" background="src/assets/background.png">
         <TimeZoneModals />
 
     </div>
@@ -19,16 +19,18 @@ export default {
 <style lang="scss">
 @import 'src/assets/variables.scss';
 
+body {
+    margin: 0 !important;
+    padding: 0px;
+}
+
 .dashboard {
-    min-width: 100vw;
-    min-height: 100vh;
     background-color: $dashboard-background-color;
-    background-size: cover;
 }
 
 .bg {
     background-image: url("../assets/background.png");
     background-position: center;
     background-size: cover;
-  }
+}
 </style>
