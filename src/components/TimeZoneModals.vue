@@ -17,44 +17,38 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import TimeZoneModal from './TimeZoneModal.vue'
 import { ref } from 'vue'
 import { findTimeZone, getTimezoneByDate, initializeLocalTime } from "../services/time/time-manager.js"
 import { useStore } from "vuex"
-export default {
-    name: TimeZoneModal,
-    setup() {
-        const store = useStore()
-        const regionName = ref('')
-        const localTimezone = getTimezoneByDate(store.getters.getBaseTime)
-        const initialModal = { index: 0, region: localTimezone, time: initializeLocalTime(localTimezone, store.getters.getBaseTime) };
-        const modals = ref([initialModal])//store timezone name e.g Asia/Tokyo
-        store.commit('addTimeBox', initialModal)
 
-        let editable = ref(false);
+const store = useStore()
+const regionName = ref('')
+const localTimezone = getTimezoneByDate(store.getters.getBaseTime)
+const initialModal = { index: 0, region: localTimezone, time: initializeLocalTime(localTimezone, store.getters.getBaseTime) };
+const modals = ref([initialModal])//store timezone name e.g Asia/Tokyo
+store.commit('addTimeBox', initialModal)
 
-        const handleAddRegion = () => {
-            const newTimezone = findTimeZone(regionName.value)
-            if (newTimezone === null) {
-                alert('Invalid region')
-            } else {
-                const newModal = { index: modals.value.length, region: newTimezone, time: initializeLocalTime(newTimezone, store.getters.getBaseTime) }
-                modals.value.push(newModal)
-                store.commit('addTimeBox', newModal)
-            }
-        }
+let editable = ref(false);
 
-        const handleEditButton = () => {
-            editable.value = !editable.value
-        }
-
-        return { handleAddRegion, regionName, modals, handleEditButton, editable }
-    },
-    components: {
-        TimeZoneModal
+const handleAddRegion = () => {
+    const newTimezone = findTimeZone(regionName.value)
+    if (newTimezone === null) {
+        alert('Invalid region')
+    } else {
+        const newModal = { index: modals.value.length, region: newTimezone, time: initializeLocalTime(newTimezone, store.getters.getBaseTime) }
+        modals.value.push(newModal)
+        store.commit('addTimeBox', newModal)
     }
 }
+
+const handleEditButton = () => {
+    editable.value = !editable.value
+}
+
+
+
 </script>
     
 <style lang="scss">
