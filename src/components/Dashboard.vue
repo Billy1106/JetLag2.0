@@ -6,14 +6,8 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import TimeZoneModals from './TimeZoneModals.vue'
-export default {
-    name: TimeZoneModals,
-    components: {
-        TimeZoneModals
-    }
-}
 </script>
 
 <style lang="scss">

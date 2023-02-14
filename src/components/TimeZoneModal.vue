@@ -17,72 +17,74 @@
             </div>
             <input id="timezone-name" class="editable-field" v-model="modal.timezone">
         </div>
-        <Moveable v-bind="moveable" @drag="handleDrag" />
+        <component :is="Moveable" v-bind="moveable" @drag="handleDrag" />
     </div>
 </template>
     
-<script>
-import { ref, watch } from 'vue'
+<script setup>
+import { ref, watch, defineProps } from 'vue'
 import { initializeLocalTime, convertToBaseTime } from "../services/time/time-manager.js"
 import { useStore } from "vuex"
 import Moveable from 'vue3-moveable'
-export default {
-    props: ['region', 'index', 'isEditable'],
-    name: Moveable,
-    setup(props) {
-        const store = useStore()
-        const id = ref(props.index)
-        const targetElement = "draggable-area" + id.value
-        let moveable = ref({ target: ["#" + targetElement + ".timezone-modal"], draggable: false, origin: false, zoom: 0 })
 
-        const regionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
-        let modal = ref({
-            timezone: (regionTime.timezone),
-            month: (regionTime.month),
-            day: (regionTime.day),
-            year: (regionTime.year),
-            hour: (regionTime.hour),
-            minutes: (regionTime.minutes),
-            time: regionTime.time
-        })
-        const handleTimeUpdated = () => {
-            const isAlreadyUpToDate = store.getters.getTimeBoxList[props.index].time === modal.value.time
-            if (!isAlreadyUpToDate) {
-                const newBaseTime = convertToBaseTime(modal.value, store.getters.getBaseTime)
-                store.commit('setBaseTime', newBaseTime)
-            }
-        }
-        const updateModal = () => {
-            const newRegionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
-            store.commit('updateCurrentTimeInTimeBaseList', props.index)
-            modal.value = {
-                timezone: (newRegionTime.timezone),
-                month: (newRegionTime.month),
-                day: (newRegionTime.day),
-                year: (newRegionTime.year),
-                hour: (newRegionTime.hour),
-                minutes: (newRegionTime.minutes),
-                time: newRegionTime.time
-            }
-        }
-
-        const switchEditMode = () => {
-            moveable.value.draggable = props.isEditable
-        }
-
-
-        const handleDrag = ({ target, transform }) => {
-            target.style.transform = transform;
-        }
-        watch(() => store.state.baseTime, updateModal)//check why updateModal needs to be callback function
-        watch(() => props.isEditable, switchEditMode)
-
-        return { modal, handleTimeUpdated, handleDrag, moveable, targetElement }
+const props = defineProps({
+    region: {
+        default: ""
     },
-    components: {
-        Moveable
+    index: {
+        default: 0
+    },
+    isEditable: {
+        default: false
+    }
+})
+const store = useStore()
+const id = ref(props.index)
+const targetElement = "draggable-area" + id.value
+let moveable = ref({ target: ["#" + targetElement + ".timezone-modal"], draggable: false, origin: false, zoom: 0 })
+
+const regionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
+let modal = ref({
+    timezone: (regionTime.timezone),
+    month: (regionTime.month),
+    day: (regionTime.day),
+    year: (regionTime.year),
+    hour: (regionTime.hour),
+    minutes: (regionTime.minutes),
+    time: regionTime.time
+})
+const handleTimeUpdated = () => {
+    const isAlreadyUpToDate = store.getters.getTimeBoxList[props.index].time === modal.value.time
+    if (!isAlreadyUpToDate) {
+        const newBaseTime = convertToBaseTime(modal.value, store.getters.getBaseTime)
+        store.commit('setBaseTime', newBaseTime)
     }
 }
+const updateModal = () => {
+    const newRegionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
+    store.commit('updateCurrentTimeInTimeBaseList', props.index)
+    modal.value = {
+        timezone: (newRegionTime.timezone),
+        month: (newRegionTime.month),
+        day: (newRegionTime.day),
+        year: (newRegionTime.year),
+        hour: (newRegionTime.hour),
+        minutes: (newRegionTime.minutes),
+        time: newRegionTime.time
+    }
+}
+
+const switchEditMode = () => {
+    moveable.value.draggable = props.isEditable
+}
+
+
+const handleDrag = ({ target, transform }) => {
+    target.style.transform = transform;
+}
+watch(() => store.state.baseTime, updateModal)//check why updateModal needs to be callback function
+watch(() => props.isEditable, switchEditMode)
+
 </script>
     
 <style lang="scss">
