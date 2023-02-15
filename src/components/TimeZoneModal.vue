@@ -51,10 +51,10 @@ let modal = ref({
     year: (regionTime.year),
     hour: (regionTime.hour),
     minutes: (regionTime.minutes),
-    time: regionTime.time
+    totalTime: regionTime.totalTime
 })
 const handleTimeUpdated = () => {
-    const isAlreadyUpToDate = store.getters.getTimeBoxList[props.index].time === modal.value.time
+    const isAlreadyUpToDate = store.getters.getTimeBoxList[props.index].totalTime === modal.value.totalTime
     if (!isAlreadyUpToDate) {
         const newBaseTime = convertToBaseTime(modal.value, store.getters.getBaseTime)
         store.commit('setBaseTime', newBaseTime)
@@ -70,7 +70,7 @@ const updateModal = () => {
         year: (newRegionTime.year),
         hour: (newRegionTime.hour),
         minutes: (newRegionTime.minutes),
-        time: newRegionTime.time
+        totalTime: newRegionTime.totalTime
     }
 }
 
