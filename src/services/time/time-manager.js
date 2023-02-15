@@ -55,7 +55,7 @@ export const initializeLocalTime = (region, baseTime = new Date()) => {
         year: currentDate.getFullYear(),
         hour: time[0].padStart(2, '0'),
         minutes: time[1].padStart(2, '0'),
-        time: currentDate.getTime()
+        totalTime: currentDate.getTime()
     }
     return regionTime;
 
