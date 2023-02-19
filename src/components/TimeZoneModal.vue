@@ -78,11 +78,10 @@ const switchEditMode = () => {
     moveable.value.draggable = props.isEditable
 }
 
-
 const handleDrag = ({ target, transform }) => {
     target.style.transform = transform;
 }
-watch(() => store.state.baseTime, updateModal)//check why updateModal needs to be callback function
+watch(() => store.state.baseTime, updateModal)
 watch(() => props.isEditable, switchEditMode)
 
 </script>
