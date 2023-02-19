@@ -4,16 +4,15 @@
         <div class="timezone-modal" :id="targetElement">
             <div id="timezone-date-year-container">
                 <div id="timezone-date">
-                    <input id="timezone-hour" class="editable-field" v-model="modal.month"
-                        @input="handleTimeUpdated" />/<input id="timezone-minutes" class="editable-field"
-                        v-model="modal.day" @input="handleTimeUpdated" />
+                    <input type="number" min="1" max="12" class="editable-field" id="timezone-month" v-model="modal.month" @input="handleTimeUpdated" />/<input
+                        type="number" class="editable-field" id="timezone-day" v-model="modal.day" @input="handleTimeUpdated" />
                 </div>
-                <input id="timezone-year" class="editable-field" v-model="modal.year" @input="handleTimeUpdated" />
+                <input type="number" id="timezone-year" class="editable-field" v-model="modal.year"
+                    @input="handleTimeUpdated" />
             </div>
             <div id="timezone-time">
-                <input id="timezone-hour" class="editable-field" v-model="modal.hour"
-                    @input="handleTimeUpdated" />:<input id="timezone-minutes" class="editable-field"
-                    v-model="modal.minutes" @input="handleTimeUpdated" />
+                <input type="number" min="0" max="23" class="editable-field" id="timezone-hour" v-model="modal.hour" @input="handleTimeUpdated" />:
+                <input type="number" min="0" max="59" class="editable-field" id="timezone-minutes" v-model="modal.minutes" @input="handleTimeUpdated" />
             </div>
             <input id="timezone-name" class="editable-field" v-model="modal.timezone">
         </div>
@@ -122,8 +121,8 @@ input {
 }
 
 #timezone-date-year-container>.editable-field {
-    width: 50%;
-    font-size: $font-size-medium;
+    width: 40%;
+    font-size: $font-size-medium-large;
     font-weight: $bold-weight;
 }
 
@@ -141,7 +140,8 @@ input {
 #timezone-time>.editable-field {
     font-size: $font-size-large;
     font-weight: $bold-weight;
-    width: 30%;
+    margin-left: 10px;
+    width: 35%;
 }
 
 #timezone-date {
@@ -150,6 +150,7 @@ input {
     color: $font-color;
     width: 50%;
     display: flex;
+    margin-left: 10px;
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -157,13 +158,16 @@ input {
 }
 
 #timezone-date>.editable-field {
-    font-size: $font-size-medium;
+    font-size: $font-size-medium-large;
     font-weight: $bold-weight;
-    width: 30%;
+    width: 40%;
 }
 
+#timezone-month {
+    padding-left: 10px;
+}
 #timezone-name {
-    font-size: $font-size-small;
+    font-size: $font-size-medium;
     font-weight: $bold-weight;
     width: 80%;
 }

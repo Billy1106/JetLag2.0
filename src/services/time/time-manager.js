@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import * as ct from "countries-and-timezones";
 import * as cityTimezones from "city-timezones";
 
@@ -20,11 +21,18 @@ export const findTimeZone = (region) => {//returns timezone of region e.g Asia/T
     return null
 }
 export const convertToBaseTime = (regionTime, baseTime) => {//convert argument time to the baseTime ( utc:-7: timezone = 'America/Edmonton',)
-    const timeDifference = -1 * ct.getTimezone(regionTime.timezone).utcOffset - baseTime.getTimezoneOffset()
-    const newLocalTime = new Date(regionTime.year, regionTime.month - 1, regionTime.day, regionTime.hour, regionTime.minutes, 0, 0);
-    const newBaseTime = new Date(newLocalTime.getTime() + timeDifference * 60 * 1000)
-    return newBaseTime
+    if(isValidInput(regionTime)) {
+        const timeDifference = -1 * ct.getTimezone(regionTime.timezone).utcOffset - baseTime.getTimezoneOffset()
+        const newLocalTime = new Date(regionTime.year, regionTime.month - 1, regionTime.day, regionTime.hour, regionTime.minutes, 0, 0);
+        const newBaseTime = new Date(newLocalTime.getTime() + timeDifference * 60 * 1000)
+        return newBaseTime
+    }
+    return baseTime
 }
+export const isValidInput = (regionTime) => {
+    return /^[1-3][0-9][0-9][0-9]$/.test(regionTime.year) && /(^[1-9]$|0[0-9]$|[0-1][0-2]$)/.test(regionTime.month) && /(^([0-9])$|([0-5][0-9])$)/.test(regionTime.hour) && /(^([0-9])$|([0-5][0-9])$)/.test(regionTime.minutes)
+}
+
 export const getDateOfTimeZone = (regionTimezone, baseTime) => {//create date instance of specified timezone and its time
     const getInitialTimeZone = ct.getTimezone(regionTimezone).utcOffset
     const utc = baseTime.toUTCString();
