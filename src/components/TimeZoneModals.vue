@@ -13,7 +13,9 @@
             <button type="button" id="edit-button" @click="handleEditButton">{{
                 editable?'Add mode': 'Edit mode'
             }}</button>
+            <button type="button" id="edit-button" @click="handleSetToCurrentTime">Reset Time</button>
         </div>
+        
     </div>
 </template>
 
@@ -28,9 +30,9 @@ const regionName = ref('')
 const localTimezone = getTimezoneByDate(store.getters.getBaseTime)
 const initialModal = { index: 0, region: localTimezone, time: initializeLocalTime(localTimezone, store.getters.getBaseTime) };
 const modals = ref([initialModal])//store timezone name e.g Asia/Tokyo
-store.commit('addTimeBox', initialModal)
-
 let editable = ref(false);
+
+store.commit('addTimeBox', initialModal)
 
 const handleAddRegion = () => {
     const newTimezone = findTimeZone(regionName.value)
@@ -47,7 +49,9 @@ const handleEditButton = () => {
     editable.value = !editable.value
 }
 
-
+const handleSetToCurrentTime = () => {
+    store.commit('setBaseTime', new Date())
+}
 
 </script>
     
