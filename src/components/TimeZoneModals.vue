@@ -51,6 +51,7 @@ const handleEditButton = () => {
 
 const handleSetToCurrentTime = () => {
     store.commit('setBaseTime', new Date())
+    store.commit('updateCurrentTimeInTimeBaseList')
 }
 
 </script>
