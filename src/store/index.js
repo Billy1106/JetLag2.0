@@ -15,7 +15,6 @@ export default createStore({
     },
     updateCurrentTimeInTimeBaseList(state) {
       for (let timeBox of state.timeBoxLists) {
-        console.log(timeBox.region)
         timeBox.time = initializeLocalTime(timeBox.region, state.baseTime)
       }
     },
