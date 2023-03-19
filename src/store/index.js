@@ -19,8 +19,6 @@ export default createStore({
       }
     },
     updateCurrentTimeOfIndexList(state, index) {
-      // eslint-disable-next-line no-debugger
-      // debugger
       state.timeBoxLists[index].time = initializeLocalTime(state.timeBoxLists[index].region, state.baseTime)
     }
   },
