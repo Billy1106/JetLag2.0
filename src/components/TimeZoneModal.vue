@@ -4,24 +4,25 @@
         <div class="timezone-modal" :id="targetElement">
             <div id="timezone-date-year-container">
                 <div id="timezone-date">
-                    <input type="number" min="1" max="12" class="editable-field" id="timezone-month" v-model="modal.month" @input="handleTimeUpdated" />/<input
-                        type="number" class="editable-field" id="timezone-day" v-model="modal.day" @input="handleTimeUpdated" />
+                    <input type="text" class="editable-field" id="timezone-month" v-model="timeBoxData.month" @input="handleTimeUpdateByUser" />
+                    /
+                    <input class="editable-field" id="timezone-day" v-model="timeBoxData.day" @input="handleTimeUpdateByUser" />
                 </div>
-                <input type="number" id="timezone-year" class="editable-field" v-model="modal.year"
-                    @input="handleTimeUpdated" />
+                <input type="text" id="timezone-year" class="editable-field" v-model="timeBoxData.year"
+                    @input="handleTimeUpdateByUser" />
             </div>
             <div id="timezone-time">
-                <input type="number" min="0" max="23" class="editable-field" id="timezone-hour" v-model="modal.hour" @input="handleTimeUpdated" />:
-                <input type="number" min="0" max="59" class="editable-field" id="timezone-minutes" v-model="modal.minutes" @input="handleTimeUpdated" />
+                <input type="text" class="editable-field" id="timezone-hour" v-model="timeBoxData.hour" @input="handleTimeUpdateByUser" />:
+                <input type="text" class="editable-field" id="timezone-minutes" v-model="timeBoxData.minutes" @input="handleTimeUpdateByUser" />
             </div>
-            <input id="timezone-name" class="editable-field" v-model="modal.timezone">
+            <input id="timezone-name" class="editable-field" v-model="timeBoxData.timezone">
         </div>
         <component :is="Moveable" v-bind="moveable" @drag="handleDrag" />
     </div>
 </template>
     
 <script setup>
-import { ref, watch, defineProps } from 'vue'
+import { ref, watch, defineProps, computed } from 'vue'
 import { initializeLocalTime, convertToBaseTime } from "../services/time/time-manager.js"
 import { useStore } from "vuex"
 import Moveable from 'vue3-moveable'
@@ -39,6 +40,7 @@ const props = defineProps({
 })
 const store = useStore()
 const id = ref(props.index)
+const isUpdated = ref(false)
 const targetElement = "draggable-area" + id.value
 let moveable = ref({ target: ["#" + targetElement + ".timezone-modal"], draggable: false, origin: false, zoom: 0 })
 
@@ -52,25 +54,40 @@ let modal = ref({
     minutes: (regionTime.minutes),
     totalTime: regionTime.totalTime
 })
-const handleTimeUpdated = () => {
-    const isAlreadyUpToDate = store.getters.getTimeBoxList[props.index].totalTime === modal.value.totalTime
-    if (!isAlreadyUpToDate) {
+const timeBoxData = computed(() => {
+    return formatDate()
+})
+
+const formatDate = () => {
+    modal.value.day = modal.value.day.toString().padStart(2, '0').slice(-2)
+    modal.value.month = modal.value.month.toString().padStart(2, '0').slice(-2)
+    modal.value.hour = modal.value.hour.toString().padStart(2, '0').slice(-2)
+    modal.value.minutes = modal.value.minutes.toString().padStart(2, '0').slice(-2)
+    return modal.value
+}
+
+const handleTimeUpdateByUser = () => {
+    if(!isUpdated.value) {
+        isUpdated.value = true
         const newBaseTime = convertToBaseTime(modal.value, store.getters.getBaseTime)
         store.commit('setBaseTime', newBaseTime)
+        store.commit('updateCurrentTimeInTimeBaseList')
     }
+    isUpdated.value = false
 }
 const updateModal = () => {
-    const newRegionTime = initializeLocalTime(props.region, store.getters.getBaseTime)
-    store.commit('updateCurrentTimeInTimeBaseList', props.index)
-    modal.value = {
-        timezone: (newRegionTime.timezone),
-        month: (newRegionTime.month),
-        day: (newRegionTime.day),
-        year: (newRegionTime.year),
-        hour: (newRegionTime.hour),
-        minutes: (newRegionTime.minutes),
-        totalTime: newRegionTime.totalTime
+    if(!isUpdated.value) {
+        modal.value = {
+            timezone: (store.getters.getTimeBoxList[props.index].time.timezone),
+            month: (store.getters.getTimeBoxList[props.index].time.month),
+            day: (store.getters.getTimeBoxList[props.index].time.day),
+            year: (store.getters.getTimeBoxList[props.index].time.year),
+            hour: (store.getters.getTimeBoxList[props.index].time.hour),
+            minutes: (store.getters.getTimeBoxList[props.index].time.minutes),
+            totalTime: store.getters.getTimeBoxList[props.index].time.totalTime
+        }
     }
+    isUpdated.value = false
 }
 
 const switchEditMode = () => {
@@ -80,7 +97,7 @@ const switchEditMode = () => {
 const handleDrag = ({ target, transform }) => {
     target.style.transform = transform;
 }
-watch(() => store.state.baseTime, updateModal)
+watch(() => store.getters.getTimeBoxList[props.index].time.totalTime, updateModal)
 watch(() => props.isEditable, switchEditMode)
 
 </script>

@@ -74,10 +74,14 @@ const handleSetToCurrentTime = () => {
 }
 
 .input-form {
+    width:30%;
+    background-color: $timezone-background-color;
+    border-radius: $timezone-radius;
     text-align: center;
     vertical-align: bottom;
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .5);
 }
 
 .add-region {
@@ -86,7 +90,7 @@ const handleSetToCurrentTime = () => {
 }
 
 .editable-button {
-    margin-top: 10%;
+    margin-top: 10px;
     text-align: center;
 }
 

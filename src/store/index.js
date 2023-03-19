@@ -15,11 +15,14 @@ export default createStore({
     },
     updateCurrentTimeInTimeBaseList(state) {
       for (let timeBox of state.timeBoxLists) {
+        console.log(timeBox.region)
         timeBox.time = initializeLocalTime(timeBox.region, state.baseTime)
       }
     },
     updateCurrentTimeOfIndexList(state, index) {
-      state.timeBoxLists[index].time = initializeLocalTime(state.timeBoxLists.region, state.baseTime)
+      // eslint-disable-next-line no-debugger
+      // debugger
+      state.timeBoxLists[index].time = initializeLocalTime(state.timeBoxLists[index].region, state.baseTime)
     }
   },
   actions: {
