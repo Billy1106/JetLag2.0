@@ -1,8 +1,7 @@
-/* eslint-disable no-debugger */
 import * as ct from "countries-and-timezones";
 import * as cityTimezones from "city-timezones";
 
-export const findTimeZone = (region) => {//returns timezone of region e.g Asia/Tokyo
+export const findTimeZone = (region) => {
     const city = cityTimezones.lookupViaCity(region)
     if (city.length) {
         return city[0].timezone
@@ -20,7 +19,7 @@ export const findTimeZone = (region) => {//returns timezone of region e.g Asia/T
 
     return null
 }
-export const convertToBaseTime = (regionTime, baseTime) => {//convert argument time to the baseTime ( utc:-7: timezone = 'America/Edmonton',)
+export const convertToBaseTime = (regionTime, baseTime) => {
     if(isValidInput(regionTime)) {
         const newLocalTime = new Date(regionTime.year, regionTime.month - 1, regionTime.day, regionTime.hour, regionTime.minutes, 0, 0);
         const timeDifference = -1 * ct.getTimezone(regionTime.timezone).utcOffset - baseTime.getTimezoneOffset()
@@ -33,7 +32,7 @@ export const isValidInput = (regionTime) => {
     return /^[1-3][0-9][0-9][0-9]$/.test(regionTime.year) && /(^[1-9]$|0[0-9]$|[0-1][0-2]$)/.test(regionTime.month) && /(^(0[0-9]|1[0-9]|2[0-3])$)/.test(regionTime.hour) && /(^([0-9])$|([0-5][0-9])$)/.test(regionTime.minutes)
 }
 
-export const getDateOfTimeZone = (regionTimezone, baseTime) => {//create date instance of specified timezone and its time
+export const getDateOfTimeZone = (regionTimezone, baseTime) => {
     const getInitialTimeZone = ct.getTimezone(regionTimezone).utcOffset
     const utc = baseTime.toUTCString();
     const gDate = new Date(utc.replace('GMT', ''));
@@ -41,7 +40,8 @@ export const getDateOfTimeZone = (regionTimezone, baseTime) => {//create date in
     gDate.setHours(hours + getInitialTimeZone / 60);
     return new Date(gDate.toString())
 }
-export const getTimezoneByDate = (date) => {//date = new Date
+
+export const getTimezoneByDate = (date) => {
     const offset = date.getTimezoneOffset() * -1
     const allTimezones = ct.getAllTimezones();
     for (const timezone in allTimezones) {

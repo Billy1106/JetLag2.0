@@ -29,7 +29,7 @@ const store = useStore()
 const regionName = ref('')
 const localTimezone = getTimezoneByDate(store.getters.getBaseTime)
 const initialModal = { index: 0, region: localTimezone, time: initializeLocalTime(localTimezone, store.getters.getBaseTime) };
-const modals = ref([initialModal])//store timezone name e.g Asia/Tokyo
+const modals = ref([initialModal])
 let editable = ref(false);
 
 store.commit('addTimeBox', initialModal)
