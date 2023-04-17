@@ -10,7 +10,6 @@ JetLag is a time difference calculator app that allows users to see the entered 
 3. You can change the time value of year, month,day, hours, and minutes.
 4. Once you change one of the timezones, you will see other timezones also apply this change.
 
-## Scoping Document (in Japanese)
+## Scoping Document
 ```
-https://www.notion.so/Simle-TD-Calculator-59e608094fdf41c39ab3cff9f0f5d57d
 ```
